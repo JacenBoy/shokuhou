@@ -34,7 +34,7 @@ Then you can clone the repository, install the dependencies using npm, and use p
 
 ```
 npm install
-pkg index.js
+pkg run build
 ```
 
 ## Who's the anime girl mascot?

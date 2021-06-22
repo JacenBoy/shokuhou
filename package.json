@@ -2,10 +2,11 @@
   "name": "shokuhou",
   "version": "1.0.0",
   "description": "A simple SMTP server tester",
-  "main": "index.js",
+  "main": "shokuhou.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node shokuhou.js",
+    "build": "pkg shokuhou.js --out-path build"
   },
   "author": "JacenBoy <jacenboy@protonmail.com>",
   "license": "GPL-3.0",
