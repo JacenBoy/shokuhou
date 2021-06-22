@@ -71,7 +71,7 @@ try {
 // First, we need to set up our promisified socket
 const socket = new net.Socket();
 const client = new PromiseSocket(socket);
-client.setTimeout(5 * 1000); // 5 seconds
+client.setTimeout(30 * 1000); // 30 seconds
 
 // We need to use "await" to continue, which is only permitted inside "async" functions
 // In order to get our code in an "async" function, we'll use an anonymous self-executing function
@@ -120,6 +120,36 @@ client.setTimeout(5 * 1000); // 5 seconds
     process.exit(0);
   }
 
+  // If the user supplied a password, attempt to use it to authenticate with the server
+  // TODO: Implement authentication
+
+  // Now we can attempt to send an email message
+  // First we send the sender and recipient to the server to initiate the tansfer
+  try {
+    await client.write(`MAIL FROM: <${clientOpts.sender}>\r\n`);
+    let userResp = await client.read();
+    // The expected response code is 250
+    if (userResp.toString().substring(0,3) != "250") throw `Improper response: ${userResp.toString()}`;
+    await client.write(`RCPT TO: <${clientOpts.recipient}>\r\n`);
+    userResp = await client.read();
+    // The expected response code is 250, however it can be 251 if the recipient is external
+    if (userResp.toString().substring(0,3) != "250" && userResp.toString().substring(0,3) != "251") throw `Improper response: ${userResp.toString()}`;
+    console.log("[*] Mail transfer initiated");
+  } catch (ex) {}
+
+  // Now send the message data
+  try {
+    await client.write("DATA\r\n");
+    let dataResp = await client.read();
+    // The expected response code is 354
+    if (dataResp.toString().substring(0,3) != "354") throw `Improper response: ${dataResp.toString()}`;
+    // Note the double CRLF after the subject; this is required for the mail headers to parse
+    await client.write(`From: <${clientOpts.sender}>\r\nTo: <${clientOpts.recipient}>\r\nSubject: SMTP Test Email\r\n\r\nIf you have received this email, your SMTP server is configured correctly\r\n.\r\n`);
+    dataResp = await client.read();
+    // The expected response code is 250
+    if (dataResp.toString().substring(0,3) != "250") throw `Improper response: ${dataResp.toString()}`;
+    console.log("[*] Message accepted by the SMTP server");
+  } catch (ex) {}
 
   // Send the QUIT command to the server and clean up the connection
   console.log("[*] Closing connection");
