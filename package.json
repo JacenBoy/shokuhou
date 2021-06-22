@@ -1,0 +1,16 @@
+{
+  "name": "smtp-checker",
+  "version": "1.0.0",
+  "description": "A simple SMTP server tester",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "James",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "minimist": "^1.2.5",
+    "promise-socket": "^7.0.0"
+  }
+}
