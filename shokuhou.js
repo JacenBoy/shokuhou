@@ -84,7 +84,7 @@ client.setTimeout(30 * 1000); // 30 seconds
     await client.connect({port: clientOpts.port, host: clientOpts.host});
     console.log(`[*] Connected to ${clientOpts.host}`);
   } catch (ex) {
-    console.error(`An error occurred connecting to the server: ${ex}`);
+    console.error(`An error occurred connecting to the server: ${ex.message}`);
     process.exit(0);
   }
 
@@ -92,10 +92,10 @@ client.setTimeout(30 * 1000); // 30 seconds
   try {
     const banner = await client.read();
     // The expected response code is 220
-    if (banner.toString().substring(0,3) != "220") throw `Improper response: ${banner.toString()}`;
+    if (banner.toString().substring(0,3) != "220") throw new Error(`Improper response: ${banner.toString()}`);
     console.log("[*] Received banner from the server");
   } catch (ex) {
-    console.error(`[X] An error occurred reading the server banner: ${ex}`);
+    console.error(`[X] An error occurred reading the server banner: ${ex.message}`);
     client.destroy();
     process.exit(0);
   }
@@ -112,10 +112,10 @@ client.setTimeout(30 * 1000); // 30 seconds
       helloResp = await client.read();
     }
     // The expected response code is 250
-    if (helloResp.toString().substring(0,3) != "250") throw `Improper response: ${helloResp.toString()}`;
+    if (helloResp.toString().substring(0,3) != "250") throw new Error(`Improper response: ${helloResp.toString()}`);
     console.log("[*] Successfully greeted the server");
   } catch (ex) {
-    console.error(`[X] An error occurred during the greeting: ${ex}`);
+    console.error(`[X] An error occurred during the greeting: ${ex.message}`);
     client.destroy();
     process.exit(0);
   }
@@ -129,14 +129,14 @@ client.setTimeout(30 * 1000); // 30 seconds
     await client.write(`MAIL FROM: <${clientOpts.sender}>\r\n`);
     let userResp = await client.read();
     // The expected response code is 250
-    if (userResp.toString().substring(0,3) != "250") throw `Improper response: ${userResp.toString()}`;
+    if (userResp.toString().substring(0,3) != "250") throw new Error(`Improper response: ${userResp.toString()}`);
     await client.write(`RCPT TO: <${clientOpts.recipient}>\r\n`);
     userResp = await client.read();
     // The expected response code is 250, however it can be 251 if the recipient is external
-    if (userResp.toString().substring(0,3) != "250" && userResp.toString().substring(0,3) != "251") throw `Improper response: ${userResp.toString()}`;
+    if (userResp.toString().substring(0,3) != "250" && userResp.toString().substring(0,3) != "251") throw new Error(`Improper response: ${userResp.toString()}`);
     console.log("[*] Mail transfer initiated");
   } catch (ex) {
-    console.error(`[X] An error occurred during initiation: ${ex}`);
+    console.error(`[X] An error occurred during initiation: ${ex.message}`);
     client.destroy();
     process.exit(0);
   }
@@ -146,15 +146,15 @@ client.setTimeout(30 * 1000); // 30 seconds
     await client.write("DATA\r\n");
     let dataResp = await client.read();
     // The expected response code is 354
-    if (dataResp.toString().substring(0,3) != "354") throw `Improper response: ${dataResp.toString()}`;
+    if (dataResp.toString().substring(0,3) != "354") throw new Error(`Improper response: ${dataResp.toString()}`);
     // Note the double CRLF after the subject; this is required for the mail headers to parse
     await client.write(`From: <${clientOpts.sender}>\r\nTo: <${clientOpts.recipient}>\r\nSubject: SMTP Test Email\r\n\r\nIf you have received this email, your SMTP server is configured correctly\r\n.\r\n`);
     dataResp = await client.read();
     // The expected response code is 250
-    if (dataResp.toString().substring(0,3) != "250") throw `Improper response: ${dataResp.toString()}`;
+    if (dataResp.toString().substring(0,3) != "250") throw new Error(`Improper response: ${dataResp.toString()}`);
     console.log("[*] Message accepted by the SMTP server");
   } catch (ex) {
-    console.error(`[X] An error occurred sending the message: ${ex}`);
+    console.error(`[X] An error occurred sending the message: ${ex.message}`);
     client.destroy();
     process.exit(0);
   }
