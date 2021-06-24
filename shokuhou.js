@@ -135,7 +135,11 @@ client.setTimeout(30 * 1000); // 30 seconds
     // The expected response code is 250, however it can be 251 if the recipient is external
     if (userResp.toString().substring(0,3) != "250" && userResp.toString().substring(0,3) != "251") throw `Improper response: ${userResp.toString()}`;
     console.log("[*] Mail transfer initiated");
-  } catch (ex) {}
+  } catch (ex) {
+    console.error(`[X] An error occurred during initiation: ${ex}`);
+    client.destroy();
+    process.exit(0);
+  }
 
   // Now send the message data
   try {
@@ -149,7 +153,11 @@ client.setTimeout(30 * 1000); // 30 seconds
     // The expected response code is 250
     if (dataResp.toString().substring(0,3) != "250") throw `Improper response: ${dataResp.toString()}`;
     console.log("[*] Message accepted by the SMTP server");
-  } catch (ex) {}
+  } catch (ex) {
+    console.error(`[X] An error occurred sending the message: ${ex}`);
+    client.destroy();
+    process.exit(0);
+  }
 
   // Send the QUIT command to the server and clean up the connection
   console.log("[*] Closing connection");
