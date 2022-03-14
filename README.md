@@ -5,7 +5,10 @@
 Testing a newly set up SMTP server is easy to do using Telnet, but remembering the syntax for SMTP commands sucks. I couldn't find anything that did what I wanted to do, so I made this as a way to automate the basic SMTP test so I wouldn't have to remember things anymore.
 
 ## What does it do?
-Shokuhou will autmoatically go through the process of running the basic commands required to send a test email, reporting each step of the way and letting you know exactly where it failed.
+Shokuhou will automatically go through the process of running the basic commands required to send a test email, reporting each step of the way and letting you know exactly where it failed.
+
+## Why Javascript?
+Some people may wonder who in their right mind would write a program like this in Javascript.
 
 ## Usage
 Shokuhou is a command-line application with three required parameters.
@@ -21,6 +24,7 @@ The below flags are optional parameters.
 -s: Sender address (if different that the username)
 -p: The server login password (if authentication is required)
 -o: The port to connect to on the server (defaults to 25)
+-v: Run in verbose mode
 ```
 
 ## Building
