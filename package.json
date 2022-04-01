@@ -11,7 +11,7 @@
   "author": "JacenBoy <jacenboy@protonmail.com>",
   "license": "GPL-3.0",
   "dependencies": {
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "promise-socket": "^7.0.0"
   }
 }
